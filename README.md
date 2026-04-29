@@ -1,13 +1,31 @@
-# Time Series Multi-Sudut Stage 1-3
+<h1 align="center">Time Series Multi-Sudut Stage 1-3</h1>
 
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)](README.md)
-[![Python](https://img.shields.io/badge/Python-3.8+-blue?style=flat-square)](https://python.org)
-[![Platform](https://img.shields.io/badge/Platform-Jetson%20Nano%2FXavier-orange?style=flat-square)](https://developer.nvidia.com/embedded/jetson)
-[![AI](https://img.shields.io/badge/AI-MobileViT%20ONNX-red?style=flat-square)](https://onnx.ai)
-[![Cloud](https://img.shields.io/badge/Cloud-Google%20Drive%20%2F%20Sheets-4285F4?style=flat-square)](https://cloud.google.com)
-[![License](https://img.shields.io/badge/License-Proprietary-black?style=flat-square)](LICENSE)
+<p align="center">
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square">
+  </a>
+  <a href="https://python.org">
+    <img src="https://img.shields.io/badge/Python-3.8+-blue?style=flat-square">
+  </a>
+  <a href="https://developer.nvidia.com/embedded/jetson">
+    <img src="https://img.shields.io/badge/Platform-Jetson%20Nano%2FXavier-orange?style=flat-square">
+  </a>
+  <a href="https://onnx.ai">
+    <img src="https://img.shields.io/badge/AI-MobileViT%20ONNX-red?style=flat-square">
+  </a>
+  <a href="https://cloud.google.com">
+    <img src="https://img.shields.io/badge/Cloud-Google%20Drive%20%2F%20Sheets-4285F4?style=flat-square">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-Proprietary-black?style=flat-square">
+  </a>
+</p>
 
-Sistem otomatis berbasis AI untuk mendeteksi penyakit pada tanaman bawang menggunakan **Jetson Nano** dengan analisis multi-sudut real-time dan integrasi cloud. Pipeline terdiri dari **3 Stage Utama**: Data Acquisition (Edge Layer), Vision Processing (AI Engine), dan Cloud Gateway.
+<p align="center">
+  Sistem otomatis berbasis AI untuk mendeteksi penyakit pada tanaman bawang menggunakan <b>Jetson Nano</b> 
+  dengan analisis multi-sudut real-time dan integrasi cloud. Pipeline terdiri dari <b>3 Stage Utama</b>: 
+  Data Acquisition (Edge Layer), Vision Processing (AI Engine), dan Cloud Gateway.
+</p>
 
 ## 📋 Daftar Isi
 - [Fitur Utama](#fitur-utama)
