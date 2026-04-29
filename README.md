@@ -57,39 +57,49 @@ Status: ✅ READY | 🔄 PROCESSING | ✓ COMPLETE
 **🔧 Components:** test_cam1.py
 
 ```mermaid
+%%{init: {"flowchart": {"htmlLabels": false}}}%%
 graph LR
-    A["🚀 START<br/>Init System"] --> B["🔍 Scan<br/>USB Ports"]
-    B --> C{" 3 Kamera<br/>Found?"}
-    C -->|❌ No| D["❌ ERROR<br/>Exit"]
-    C -->|✅ Yes| E["⚙️ Set Config<br/>CAM0=Front<br/>CAM1=Right<br/>CAM2=Top"]
-    
-    E --> F["🌐 Fetch Weather<br/>Open-Meteo API<br/>Temp, Wind, Code"]
-    F --> G{Weather<br/>OK?}
-    G -->|❌ Fail| H["⚠️ Use<br/>Default"]
-    G -->|✅ OK| H
-    
-    H --> I["⏰ Timestamp<br/>YYYY-MM-DD<br/>HH:MM:SS"]
-    I --> J["📸 CAPTURE LOOP"]
-    
-    J --> K["🎥 CAM0<br/>Front Angle"]
-    K --> L["📝 Add Overlay<br/>Time+Temp+Weather"]
-    L --> M["💾 Save<br/>CAM0_TS_TEMP.jpg<br/>hasil_foto/"]
-    
-    M --> N["🎥 CAM1<br/>Right Angle"]
-    N --> O["📝 Add Overlay"]
-    O --> P["💾 Save<br/>CAM1_TS_TEMP.jpg"]
-    
-    P --> Q["🎥 CAM2<br/>Top Angle"]
-    Q --> R["📝 Add Overlay"]
-    R --> S["💾 Save<br/>CAM2_TS_TEMP.jpg"]
-    
-    S --> T["📋 Write Session<br/>LOG_YYYYMMDD_HHMMSS.json<br/>Contains: session_id, weather,<br/>timestamp, camera config"]
-    
-    T --> U["✅ READY<br/>3 Images Ready<br/>for AI Processing"]
-    
-    style A fill:#90EE90
-    style D fill:#FF6B6B
-    style U fill:#87CEEB
+    Start["🚀 START<br/>Init System"] 
+    --> Scan["🔍 Scan<br/>USB Ports"]
+
+    Scan --> CheckCam{"3 Kamera<br/>Found?"}
+
+    CheckCam -->|❌ No| Error["❌ ERROR<br/>Exit"]
+    CheckCam -->|✅ Yes| Config["⚙️ Set Config<br/>CAM0=Front<br/>CAM1=Right<br/>CAM2=Top"]
+
+    Config --> Fetch["🌐 Fetch Weather<br/>Open-Meteo API<br/>Temp, Wind, Code"]
+    Fetch --> WeatherOK{"Weather<br/>OK?"}
+
+    WeatherOK -->|❌ Fail| Default["⚠️ Use Default Weather"]
+    WeatherOK -->|✅ OK| Default
+
+    Default --> Timestamp["⏰ Timestamp<br/>YYYY-MM-DD HH:MM:SS"]
+
+    Timestamp --> CaptureStart["📸 CAPTURE LOOP"]
+
+    subgraph "Camera Capture Loop"
+        direction TB
+        Cam0["🎥 CAM0 - Front"] 
+        --> Overlay0["📝 Add Overlay<br/>Time + Temp + Weather"]
+        --> Save0["💾 Save<br/>CAM0_TS_TEMP.jpg<br/>hasil_foto/"]
+
+        Save0 --> Cam1["🎥 CAM1 - Right"]
+        --> Overlay1["📝 Add Overlay"]
+        --> Save1["💾 Save<br/>CAM1_TS_TEMP.jpg"]
+
+        Save1 --> Cam2["🎥 CAM2 - Top"]
+        --> Overlay2["📝 Add Overlay"]
+        --> Save2["💾 Save<br/>CAM2_TS_TEMP.jpg"]
+    end
+
+    Save2 --> Log["📋 Write Session Log<br/>LOG_YYYYMMDD_HHMMSS.json<br/>session_id, weather, timestamp, config"]
+
+    Log --> Ready["✅ READY<br/>3 Images Ready<br/>for AI Processing"]
+
+    style Start fill:#90EE90,stroke:#333
+    style Error fill:#FF6B6B,stroke:#333
+    style Ready fill:#87CEEB,stroke:#333
+    style CaptureStart fill:#FFD700,stroke:#333
 ```
 
 **Input (Sources):**
