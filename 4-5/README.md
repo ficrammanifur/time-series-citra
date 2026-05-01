@@ -1,6 +1,3 @@
-Berikut **README.md** yang sudah diperbaiki dan disesuaikan dengan implementasi **Flask** (bukan Streamlit) yang berjalan di server dengan **auto-sync dari Google Sheets**:
-
-```markdown
 <h1 align="center">
   📊 Time Series Dashboard Bawang Merah<br>
   <sub>Stage 4 & 5: Intelligence Layer + User Visualization</sub>
