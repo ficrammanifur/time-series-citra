@@ -7,8 +7,9 @@
   <img src="/assets/esp32_jetson_controller_banner.png?height=400&width=700" alt="ESP32 Jetson Controller" width="700"/>
 </p>
 <p align="center">
-  <em>ESP32-S3 berbasis FREENOVE dengan kamera OV2640, kontrol relay power, capture foto otomatis, notifikasi Telegram, pengiriman foto ke Discord, MQTT control, dan web interface sederhana. Cocok untuk remote monitoring Jetson Nano / perangkat lain.</em>
+  <em>ESP32-S3 (FREENOVE) dengan kamera OV2640 untuk remote monitoring dan kontrol Jetson Nano. Fitur lengkap: relay power control, foto capture, notifikasi Telegram, kirim foto ke Discord, MQTT integration, dan web interface.</em>
 </p>
+
 <p align="center">
   <img src="https://img.shields.io/badge/last_commit-today-brightgreen?style=for-the-badge" />
   <img src="https://img.shields.io/badge/language-C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" />
@@ -25,194 +26,239 @@
 - [Mengapa ESP32 Jetson Controller?](#-mengapa-esp32-jetson-controller)
 - [Demo Singkat](#-demo-singkat)
 - [Komponen Utama](#-komponen-utama-dan-fungsinya)
+- [Wiring Diagram](#-wiring-diagram)
 - [Software & Library](#-software--library)
+- [Use Case Diagram](#-use-case-diagram)
 - [Arsitektur Sistem](#-arsitektur-sistem)
-- [Alur Kerja](#-alur-kerja-sistem)
+- [Alur Kerja Sistem](#-alur-kerja-sistem)
 - [Instalasi](#-instalasi)
 - [Cara Menjalankan](#-cara-menjalankan)
 - [Testing](#-testing)
 - [Troubleshooting](#-troubleshooting)
 - [Struktur Folder](#-struktur-folder)
 - [Kontribusi](#-kontribusi)
-- [Pengembang](#-pengembang)
 - [Lisensi](#-lisensi)
 
 ---
 
-## 🚀 Mengapa ESP32 untuk Jetson Controller?
+## 🚀 Mengapa ESP32 Jetson Controller?
 
-### Keunggulan ESP32-S3 sebagai Remote Controller
-| Fitur              | Keunggulan ESP32-S3                          | Manfaat |
-|--------------------|---------------------------------------------|--------|
-| **Kamera**         | Native Camera Interface + PSRAM             | Foto resolusi SVGA (JPEG) |
-| **WiFi**           | Built-in + WiFiManager                      | Setup mudah tanpa kabel |
-| **MQTT**           | PubSubClient + EMQX                         | Kontrol real-time relay & kamera |
-| **Relay Control**  | GPIO + Power ON/OFF                         | Nyalakan/mematikan Jetson remotely |
-| **Notifikasi**     | Telegram + Discord Webhook                  | Alert + foto langsung |
-| **Web Server**     | Built-in WebServer                          | Kontrol manual via browser |
-| **Memory**         | 8MB PSRAM + Flash                           | Buffer foto besar |
+ESP32-S3 sangat cocok untuk proyek ini karena mendukung **kamera** secara native, PSRAM, WiFi stabil, dan cukup GPIO untuk relay + status LED.
 
-### Fitur Utama
-✅ **Kontrol Relay** - Power ON/OFF Jetson Nano via MQTT atau web  
-✅ **Capture Foto** - Ambil foto via MQTT atau tombol web  
-✅ **Kirim ke Discord** - Foto langsung ke channel via webhook  
-✅ **Notifikasi Telegram** - Status & alert real-time  
-✅ **WiFiManager** - Setup WiFi via captive portal  
-✅ **Web Interface** - Kontrol sederhana dari HP/Laptop  
-✅ **MQTT Integration** - TOPIC_RELAY, TOPIC_CAMERA, TOPIC_STATUS  
+**Fitur Utama:**
+- Kontrol power Jetson (Relay)
+- Capture & kirim foto ke Discord
+- Notifikasi Telegram
+- Kontrol via MQTT & Web Browser
+- WiFiManager (setup mudah)
 
 ---
 
 ## 📸 Demo Singkat
 
-<p align="center">
-  <em>ESP32 mengontrol power Jetson, mengambil foto kamera, mengirim ke Discord, dan mengirim notifikasi Telegram. Semua bisa dikontrol via MQTT atau web browser.</em>
-</p>
-
-<p align="center">
-  <img src="/assets/jetson_controller_demo.gif?height=400&width=700" alt="ESP32 Jetson Controller Demo" width="700"/><br/>
-  <em>Demo: Relay control, foto capture, Discord + Telegram</em>
-</p>
-
-### Fitur Kontrol
-- **MQTT** → `1/2/relay` (ON/OFF) dan `1/2/kamera` (CAPTURE)
-- **Web** → `/on`, `/off`, `/capture`
-- **Telegram** → Kirim status & alert
-- **Discord** → Foto JPEG langsung ke webhook
+*(Tambahkan GIF demo di sini nanti)*
 
 ---
 
 ## 🧩 Komponen Utama dan Fungsinya
 
-| Komponen              | Fungsi                              | Keterangan |
-|-----------------------|-------------------------------------|----------|
-| **ESP32-S3 (FREENOVE)** | Otak utama + kamera                 | Camera interface + PSRAM |
-| **Relay Module**      | Kontrol power Jetson                | Active LOW (GPIO 14) |
-| **Kamera OV2640**     | Capture foto                        | FRAMESIZE_SVGA, JPEG |
-| **LED Status**        | Indikator aktif                     | GPIO 2 |
-| **WiFi Antenna**      | Koneksi internet                    | MQTT + HTTP |
+| Komponen              | Fungsi                              | Pin |
+|-----------------------|-------------------------------------|-----|
+| ESP32-S3 (FREENOVE)   | Main Controller + Camera            | - |
+| Relay Module          | Power ON/OFF Jetson                 | GPIO 14 |
+| LED Status            | Indikator aktif                     | GPIO 2 |
+| Kamera OV2640         | Ambil foto                          | Dedicated camera pins |
+
+---
+
+## 🔌 Wiring Diagram (ASCII)
+
+```ascii
+                     +---------------------+
+                     |   ESP32-S3          |
+                     |   FREENOVE          |
+                     +----------+----------+
+                                |
+          +---------------------+--------------------+
+          |                     |                    |
+         3.3V                  GND                  5V (Relay VCC)
+          |                     |                    |
+          |                     |                    |
+     +----+----+           +----+----+          +----+----+
+     |  LED    |           |  Relay  |          |  Camera |
+     | (GPIO 2)|           | (GPIO14)|          | OV2640  |
+     +---------+           +---------+          +---------+
+          |                     |                    |
+         GND                   NO ───► Jetson Power   Camera Connector
+                                COM ───► Jetson GND
+
+Camera Pins (FREENOVE ESP32-S3):
++------------+-----------+
+| Function   | GPIO      |
++------------+-----------+
+| XCLK       | 15        |
+| SIOD (SDA) | 4         |
+| SIOC (SCL) | 5         |
+| Y9         | 16        |
+| Y8         | 17        |
+| Y7         | 18        |
+| Y6         | 12        |
+| Y5         | 10        |
+| Y4         | 8         |
+| Y3         | 9         |
+| Y2 (D0)    | 11        |
+| VSYNC      | 6         |
+| HREF       | 7         |
+| PCLK       | 13        |
++------------+-----------+
+```
 
 ---
 
 ## 💻 Software & Library
 
-### Library yang Digunakan
-| Library              | Fungsi |
-|----------------------|--------|
-| **WiFi.h**           | Koneksi WiFi |
-| **WiFiManager.h**    | Auto connect + captive portal |
-| **PubSubClient.h**   | MQTT client (EMQX) |
-| **HTTPClient.h**     | Telegram & Discord webhook |
-| **esp_camera.h**     | Driver kamera ESP32 |
-| **WebServer.h**      | Web interface |
+**Library:**
+- `WiFi.h`
+- `WiFiManager.h`
+- `PubSubClient.h`
+- `HTTPClient.h`
+- `esp_camera.h`
+- `WebServer.h`
 
-### Topik MQTT
-- `1/2/relay` → `"ON"` atau `"OFF"`
-- `1/2/kamera` → `"CAPTURE"`
-- `1/2/status` → `"ONLINE"` (heartbeat)
+**MQTT Topics:**
+- `1/2/relay` → `ON` / `OFF`
+- `1/2/kamera` → `CAPTURE`
+- `1/2/status` → `ONLINE` (heartbeat)
+
+---
+
+## 📊 Use Case Diagram
+
+```mermaid
+flowchart TD
+    subgraph User["User / Admin"]
+        A[Control via MQTT]
+        B[Control via Web Browser]
+        C[Receive Telegram Notification]
+        D[Receive Photo on Discord]
+    end
+
+    ESP[ESP32 Jetson Controller] <--> A
+    ESP <--> B
+    ESP --> C
+    ESP --> D
+
+    ESP --> Relay[Relay Control\nPower Jetson]
+    ESP --> Camera[Capture Photo]
+    
+    classDef user fill:#e3f2fd,stroke:#1976d2
+    classDef esp fill:#e8f5e8,stroke:#388e3c
+    class A,B,C,D user
+    class ESP esp
+```
 
 ---
 
 ## 🏗️ Arsitektur Sistem
 
-### Diagram Blok
 ```mermaid
 flowchart TD
-    MQTT["MQTT Broker (EMQX)"] <--> ESP32["ESP32-S3 Jetson Controller"]
-    ESP32 <--> RELAY["Relay → Jetson Power"]
-    ESP32 <--> CAMERA["OV2640 Camera"]
-    ESP32 --> TELEGRAM["Telegram Bot"]
-    ESP32 --> DISCORD["Discord Webhook"]
-    ESP32 <--> WEB["Web Browser (Port 80)"]
-    ESP32 --> WIFI["WiFiManager"]
+    MQTT[MQTT Broker\nbroker.emqx.io] <--> ESP[ESP32-S3]
+    ESP <--> Relay[Relay Module\nGPIO 14]
+    ESP <--> Camera[OV2640 Camera]
+    ESP --> Telegram[Telegram Bot API]
+    ESP --> Discord[Discord Webhook]
+    ESP <--> Web[WebServer\nPort 80]
+    WiFi[WiFiManager] --> ESP
 ```
 
-### Alur Utama
-1. WiFiManager → Auto connect
-2. MQTT connect + subscribe
-3. Web server start
-4. Siap terima perintah relay / capture
+---
+
+## 🔄 Alur Kerja Sistem (Flowchart Lengkap)
+
+```mermaid
+flowchart TD
+    START([Power ON]) --> WiFiSetup[WiFiManager\nCaptive Portal]
+    WiFiSetup --> Connect[WiFi Connected?]
+    Connect -->|Yes| InitCamera[Initialize Camera]
+    Connect -->|No| WiFiSetup
+    
+    InitCamera --> InitMQTT[Connect MQTT + Subscribe]
+    InitMQTT --> StartWeb[Start WebServer]
+    StartWeb --> SendOnline[Telegram: ESP32 Online]
+    
+    StartWeb --> MainLoop[Main Loop]
+    
+    MainLoop --> HandleWeb[Handle Web Client]
+    MainLoop --> MQTTLoop[MQTT Loop]
+    
+    MQTTLoop --> Message{New Message?}
+    Message -->|Relay| ControlRelay[ON/OFF Relay\n+ Telegram]
+    Message -->|Camera| CaptureSend[Capture Photo\n→ Discord]
+    
+    HandleWeb -->| /on | ControlRelay
+    HandleWeb -->| /capture | CaptureSend
+    
+    subgraph Periodic
+        Status[Publish Status\nEvery 60s]
+    end
+    
+    MainLoop -.-> Status
+    classDef start fill:#ffebee,stroke:#d32f2f
+    classDef process fill:#e3f2fd,stroke:#1976d2
+    class START start
+    class MainLoop,HandleWeb,MQTTLoop process
+```
 
 ---
 
 ## ⚙️ Instalasi
 
-### 1. Clone Repository
-```bash
-git clone https://github.com/ficrammanifur/esp32-jetson-controller.git
-cd esp32-jetson-controller
-```
-
-### 2. Setup Arduino IDE
-- Install **ESP32** board package (versi 2.0+ atau 3.0+)
-- Install library via Library Manager:
-  - `WiFiManager` by tzapu
-  - `PubSubClient` by Nick O'Leary
-  - Lainnya sudah built-in (HTTPClient, esp_camera)
-
-### 3. Konfigurasi
-Edit bagian **CONFIG** di `main.ino`:
-```cpp
-#define BOT_TOKEN "xxxxxxxx:AAH..." 
-#define CHAT_ID   "xxxxxxxxx"
-#define DISCORD_WEBHOOK "/api/webhooks/..."
-```
-
-### 4. Upload
-- Board: **ESP32S3 Dev Module** (atau sesuai FREENOVE)
-- PSRAM: **OPI PSRAM**
-- Upload dan buka Serial Monitor (115200)
+1. Clone repo
+2. Install ESP32 board di Arduino IDE
+3. Install library: **WiFiManager** & **PubSubClient**
+4. Edit konfigurasi (BOT_TOKEN, CHAT_ID, Discord Webhook)
+5. Pilih board **ESP32S3 Dev Module**, enable PSRAM → **OPI PSRAM**
+6. Upload
 
 ---
 
 ## 🚀 Cara Menjalankan
 
-1. **Power ON** ESP32
-2. Hubungkan ke WiFi via captive portal (`ESP32-Jetson-Control`)
-3. Buka Serial Monitor untuk melihat IP
-4. Akses web: `http://<IP>`
-5. Kirim perintah via MQTT client (MQTT Explorer dll)
-
-**Contoh Perintah MQTT:**
-- Topic: `1/2/relay` → Payload: `ON`
-- Topic: `1/2/kamera` → Payload: `CAPTURE`
+1. Power ON ESP32
+2. Connect ke WiFi via captive portal (`ESP32-Jetson-Control`)
+3. Buka Serial Monitor (115200)
+4. Akses web: `http://IP-ESP32`
+5. Kontrol via MQTT atau web
 
 ---
 
 ## 🧪 Testing
 
-- **Relay Test**: Kirim ON/OFF via MQTT atau web
-- **Camera Test**: Tekan tombol Capture di web atau MQTT
-- **Telegram**: Cek notifikasi saat startup / action
-- **Discord**: Foto harus muncul di channel
-- **Web Interface**: Buka di browser
+- Test Relay (ON/OFF)
+- Test Camera Capture
+- Test Telegram & Discord
+- Test Web Interface
+- Test MQTT Command
 
 ---
 
 ## 🐞 Troubleshooting
 
-**Kamera gagal init**
-- Pastikan PSRAM di-enable di menu tools
-- Cek pin definition sesuai FREENOVE ESP32-S3
-
-**Tidak connect MQTT**
-- Cek WiFi dan broker (`broker.emqx.io:1883`)
-
-**Foto tidak terkirim ke Discord**
-- Cek webhook URL (harus lengkap path)
-- Pastikan boundary multipart benar
-
-**Relay tidak nyala**
-- Relay active LOW (digitalWrite LOW = ON)
+**Kamera gagal init** → Pastikan PSRAM enabled  
+**Relay tidak jalan** → Relay Active LOW  
+**Foto tidak terkirim** → Cek Discord webhook URL  
+**MQTT tidak connect** → Cek internet & broker
 
 ---
 
 ## 📁 Struktur Folder
+
 ```
 esp32-jetson-controller/
-├── main.ino                 # Program utama
-├── assets/                  # Gambar & banner
-│   ├── esp32_jetson_controller_banner.png
+├── main.ino
+├── assets/
+│   ├── banner.png
 │   └── demo.gif
 ├── README.md
 └── LICENSE
@@ -221,18 +267,17 @@ esp32-jetson-controller/
 ---
 
 ## 🤝 Kontribusi
-Kontribusi sangat diterima! Bisa tambah fitur:
-- Tambah sensor suhu Jetson
-- RTSP streaming
-- Deep sleep mode
+
+Silakan fork dan buat Pull Request. Fitur yang bisa ditambahkan:
+- RTSP Streaming
+- Sensor suhu Jetson
+- Notifikasi baterai/low power
 - Multi relay
 
 ---
 
 <div align="center">
-  
-**Remote Power & Vision Controller for Jetson Nano**  
-**ESP32-S3 + MQTT + Telegram + Discord**  
-**Star this repo if you find it helpful!**  
-<p><a href="#top">⬆ Back to Top</a></p>
+<strong>ESP32-S3 Jetson Remote Controller</strong><br>
+MQTT • Telegram • Discord • Camera • Relay<br><br>
+⭐ Star repo ini jika bermanfaat!
 </div>
