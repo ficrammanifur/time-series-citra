@@ -468,9 +468,9 @@ FORCE_HST = 2  # Ubah sesuai kebutuhan
 
 ---
 
-## 📜 Lisensi
-
 <div align="center">
+
+## 📜 Lisensi
   
 **© 2026 UCA-UCIL Creative Tech. All rights reserved.**
 
