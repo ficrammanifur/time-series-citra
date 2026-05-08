@@ -1027,6 +1027,11 @@ Untuk issues atau questions:
 
 ---
 
+<div align="center">
+  
 **Last Updated:** 2024-01-15  
 **Version:** 1.0.0  
 **License:** Proprietary - Universitas Cendekia Abditama
+
+<p><a href="#top">⬆ Back on Top</a></p>
+</div>
