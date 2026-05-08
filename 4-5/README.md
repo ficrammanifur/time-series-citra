@@ -469,7 +469,11 @@ FORCE_HST = 2  # Ubah sesuai kebutuhan
 ---
 
 ## 📜 Lisensi
+
 <div align="center">
-© 2026 UCA-UCIL Creative Tech. All rights reserved.
+  
+**© 2026 UCA-UCIL Creative Tech. All rights reserved.**
+
 <p><a href="#top">⬆ Back on Top</a></p>
+
 </div>
