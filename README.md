@@ -442,31 +442,31 @@ graph LR
 │         │                 │                 │               │
 │         └─────────────────┼─────────────────┘               │
 │                           ▼                                 │
-│                 📸 test_cam1.py                             │
-│              (Capture + Weather)                            │
+│                   📸 test_cam1.py                           │
+│                 (Capture + Weather)                         │
 │                           │                                 │
 │                           ▼                                 │
-│              📁 hasil_foto/ (Images)                        │
+│                 📁 hasil_foto/ (Images)                     │
+│                           │                                 │
+│                           │                                 │
+│                           ▼                                 │
+│           🤖 test_ai.py (MobileViT Inference)               │
+│                  ├─ CAM0 Analysis                           │
+│                  ├─ CAM1 Analysis                           │
+│                  └─ CAM2 Analysis                           │
 │                           │                                 │
 │         ┌─────────────────┼─────────────────┐               │
 │         ▼                 ▼                 ▼               │
-│    🤖 test_ai.py (MobileViT Inference)                      │
-│    ├─ CAM0 Analysis                                         │
-│    ├─ CAM1 Analysis                                         │
-│    └─ CAM2 Analysis                                         │
-│                           │                                 │
-│         ┌─────────────────┼─────────────────┐               │
-│         ▼                 ▼                 ▼               │
-│    Prediksi Posisi:Depan | Prediksi Posisi:Kanan | ...      │
+│    Prediksi:Depan   Prediksi:Kanan     Prediksi:Atas        │
 │         │                 │                 │               │
 │         └─────────────────┼─────────────────┘               │
 │                           ▼                                 │
-│           📤 gateway_cloud.py (Upload)                      │
+│                 📤 gateway_cloud.py (Upload)                │
 │                           │                                 │
 │         ┌─────────────────┼─────────────────┐               │
 │         ▼                 ▼                 ▼               │
 │    🔗 Google Drive   📊 Google Sheets   ☁️ Cloud Storage     │
-│    (Foto)           (Metadata)                              │
+│       (Foto)           (Metadata)                           │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -612,10 +612,10 @@ FULL SYSTEM PIPELINE
             ┌───────────────┼───────────────┐
             │               │               │
             ▼               ▼               ▼
-       CAM0 JPG        CAM1 JPG        CAM2 JPG
-    (640×480)      (640×480)      (640×480)
-    + Metadata        + Metadata      + Metadata
-    + Timestamp       + Timestamp     + Timestamp
+         CAM0 JPG        CAM1 JPG        CAM2 JPG
+        (640×480)       (640×480)       (640×480)
+        + Metadata      + Metadata      + Metadata
+        + Timestamp     + Timestamp     + Timestamp
             │               │               │
             └───────────────┼───────────────┘
                             │
@@ -625,30 +625,30 @@ FULL SYSTEM PIPELINE
         ┌───────────────────┼───────────────────┐
         │                   │                   │
         ▼                   ▼                   ▼
-    ┌──────────┐        ┌──────────┐       ┌──────────┐
-    │ STAGE 2: │        │ STAGE 2: │       │ STAGE 2: │
-    │ VISION   │        │ VISION   │       │ VISION   │
-    │ PROCESS  │        │ PROCESS  │       │ PROCESS  │
-    │          │        │          │       │          │
-    │ CAM0     │        │ CAM1     │       │ CAM2     │
-    │ Analysis │        │ Analysis │       │ Analysis │
-    │          │        │          │       │          │
-    │ • OpenCV │        │ • OpenCV │       │ • OpenCV │
-    │ • MobileViT        │ • MobileViT      │ • MobileViT
-    │ • TensorRT         │ • TensorRT       │ • TensorRT
-    │ • Disease: Spot    │ • Disease: Spot  │ • Disease: Blotch
-    │ • Score: 94.5%     │ • Score: 91.2%   │ • Score: 87.6%
+    ┌──────────┐        ┌──────────┐      ┌──────────┐
+    │ STAGE 2: │        │ STAGE 2: │      │ STAGE 2: │
+    │ VISION   │        │ VISION   │      │ VISION   │
+    │ PROCESS  │        │ PROCESS  │      │ PROCESS  │
+    │          │        │          │      │          │
+    │ CAM0     │        │ CAM1     │      │ CAM2     │
+    │ Analysis │        │ Analysis │      │ Analysis │
+    │          │        │          │      │          │
+    │ • OpenCV │        │ • OpenCV │      │ • OpenCV │
+    │ • MobileViT       │ • MobileViT     │ • MobileViT
+    │ • TensorRT        │ • TensorRT      │ • TensorRT
+    │ • Disease: Spot   │ • Disease: Spot │ • Disease: Blotch
+    │ • Score: 94.5%    │ • Score: 91.2%  │ • Score: 87.6%
     └────┬─────┘        └────┬─────┘      └────┬─────┘
-         │                   │                  │
-         └───────────────────┼──────────────────┘
+         │                   │                 │
+         └───────────────────┼─────────────────┘
                              │
             ┌────────────────┼────────────────┐
             │                │                │
             ▼                ▼                ▼
-       RESULT 0          RESULT 1         RESULT 2
-    Depan:              Kanan:           Atas:
-    Spot               Spot             Blotch
-    94.5%              91.2%            87.6%
+        RESULT 0          RESULT 1          RESULT 2
+        Depan:            Kanan:            Atas:
+        Spot              Spot              Blotch
+        94.5%             91.2%             87.6%
             │                │                │
             └────────────────┼────────────────┘
                              │
@@ -660,17 +660,17 @@ FULL SYSTEM PIPELINE
     to Drive          (token.json)           (build rows)
         │                    │                    │
         │                    └────────┬───────────┘
-        │                            │
-        │                    ┌───────▼────────┐
-        │                    │ STAGE 3: CLOUD │
-        │                    │ GATEWAY        │
-        │                    │                │
-        │                    │ • Auth check   │
-        │                    │ • Parallel up. │
-        │                    │ • Retry logic  │
-        │                    └───────┬────────┘
-        │                            │
-        ▼                            ▼
+        │                             │
+        │                     ┌───────▼────────┐
+        │                     │ STAGE 3: CLOUD │
+        │                     │ GATEWAY        │
+        │                     │                │
+        │                     │ • Auth check   │
+        │                     │ • Parallel up. │
+        │                     │ • Retry logic  │
+        │                     └───────┬────────┘
+        │                             │
+        ▼                             ▼
     ☁️ GOOGLE DRIVE             📊 GOOGLE SHEETS
     /detected_onions/            onion_analysis
     CAM0_TS.jpg                  (spreadsheet)
