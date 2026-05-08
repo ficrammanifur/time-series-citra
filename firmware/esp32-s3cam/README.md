@@ -75,8 +75,8 @@ ESP32-S3 sangat cocok untuk proyek ini karena mendukung **kamera** secara native
 
 ```ascii
                      +---------------------+
-                     |   ESP32-S3          |
-                     |   FREENOVE          |
+                     |       ESP32-S3      |
+                     |       FREENOVE      |
                      +----------+----------+
                                 |
           +---------------------+--------------------+
