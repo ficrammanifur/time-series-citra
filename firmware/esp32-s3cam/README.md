@@ -3,9 +3,9 @@
     <sub>Remote Power + Camera via MQTT, Telegram & Discord</sub>
 </h1>
 
-<p align="center">
+<!-- <p align="center">
   <img src="/assets/esp32_jetson_controller_banner.png?height=400&width=700" alt="ESP32 Jetson Controller" width="700"/>
-</p>
+</p> -->
 <p align="center">
   <em>ESP32-S3 (FREENOVE) dengan kamera OV2640 untuk remote monitoring dan kontrol Jetson Nano. Fitur lengkap: relay power control, foto capture, notifikasi Telegram, kirim foto ke Discord, MQTT integration, dan web interface.</em>
 </p>
@@ -84,13 +84,13 @@ ESP32-S3 sangat cocok untuk proyek ini karena mendukung **kamera** secara native
          3.3V                  GND                  5V (Relay VCC)
           |                     |                    |
           |                     |                    |
-     +----+----+           +----+----+          +----+----+
-     |  LED    |           |  Relay  |          |  Camera |
-     | (GPIO 2)|           | (GPIO14)|          | OV2640  |
-     +---------+           +---------+          +---------+
+     +----+-----+          +----+-----+         +----+-----+
+     |  LED     |          |  Relay   |         |  Camera  |
+     | (GPIO 2) |          | (GPIO14) |         |  OV2640  |
+     +----------+          +----------+         +----------+
           |                     |                    |
-         GND                   NO ───► Jetson Power   Camera Connector
-                                COM ───► Jetson GND
+         GND            NO ───► Jetson Power   Camera Connector
+                         COM ───► Jetson GND
 
 Camera Pins (FREENOVE ESP32-S3):
 +------------+-----------+
@@ -280,4 +280,7 @@ Silakan fork dan buat Pull Request. Fitur yang bisa ditambahkan:
 <strong>ESP32-S3 Jetson Remote Controller</strong><br>
 MQTT • Telegram • Discord • Camera • Relay<br><br>
 ⭐ Star repo ini jika bermanfaat!
+    
+<p><a href="#top">⬆ Back on Top</a></p>
+
 </div>
